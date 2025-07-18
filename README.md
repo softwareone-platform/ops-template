@@ -4,7 +4,7 @@ This repository serves as a common location for storing reusable GitHub Actions 
 
 ## Workflows
 
-### DependencyTrack
+### DependencyTrack (dependency-track-python-uv.yml)
 
 Generates and uploads a Software Bill of Materials (SBOM) for Python projects to DependencyTrack.
 
