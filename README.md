@@ -12,7 +12,7 @@ Generates and uploads a Software Bill of Materials (SBOM) for Python projects to
 ```yaml
 jobs:
   dependencyTrack:
-    uses: softwareone-platform/ops-template/.github/workflows/dependencyTrack.yml@main
+    uses: softwareone-platform/ops-template/.github/workflows/dependency-track-python-uv.yml@main
     with:
       projectName: 'your-project-name'
     secrets:
