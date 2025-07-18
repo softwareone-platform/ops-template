@@ -1,0 +1,49 @@
+name: DependencyTrack
+
+on:
+  workflow_call:
+    inputs:
+      projectName:
+        required: true
+        type: string
+      projectVersion:
+        required: true
+        type: string
+    secrets:
+      DEPENDENCYTRACK_APIKEY:
+        required: true
+
+jobs:
+  dtrack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install uv and set up its cache
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+      - name: Install the project dependancies
+        run: uv sync
+      - name: Install cyclonedx-bom
+        run: uv tool install cyclonedx-bom
+      - name: Generate SBOM
+        run: uv tool run --from cyclonedx-bom cyclonedx-py environment .venv > sbom.json
+      - name: Upload SBOM
+        uses: DependencyTrack/gh-upload-sbom@v3
+        with:
+          serverHostname: ${{ vars.DEPENDENCYTRACK_SERVER_HOSTNAME }}
+          protocol: 'https'
+          apiKey: ${{ secrets.DEPENDENCYTRACK_APIKEY }}
+          projectName: ${{ inputs.projectName }}
+          projectVersion: ${{ inputs.projectVersion }}
+          bomFilename: "sbom.json"
+          autoCreate: true
