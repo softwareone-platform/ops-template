@@ -6,9 +6,6 @@ on:
       projectName:
         required: true
         type: string
-      projectVersion:
-        required: true
-        type: string
     secrets:
       DEPENDENCYTRACK_APIKEY:
         required: true
@@ -22,6 +19,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: 'Get the major version'
+        id: get_version
+        run: echo "MAJOR=${GITHUB_REF/refs\/tags\//}" |cut -d"." -f1 >> "$GITHUB_OUTPUT"
       - name: Install uv and set up its cache
         uses: astral-sh/setup-uv@v4
         with:
@@ -40,10 +40,10 @@ jobs:
       - name: Upload SBOM
         uses: DependencyTrack/gh-upload-sbom@v3
         with:
-          serverHostname: ${{ vars.DEPENDENCYTRACK_SERVER_HOSTNAME }}
+          serverHostname: 'dependency-track.s1.team'
           protocol: 'https'
           apiKey: ${{ secrets.DEPENDENCYTRACK_APIKEY }}
           projectName: ${{ inputs.projectName }}
-          projectVersion: ${{ inputs.projectVersion }}
+          projectVersion: ${{ steps.get_version.outputs.MAJOR }}
           bomFilename: "sbom.json"
           autoCreate: true
