@@ -1,4 +1,4 @@
-name: DependencyTrack for Python/Poetry
+name: DependencyTrack for Python/uv
 
 on:
   workflow_call:
