@@ -38,7 +38,7 @@ jobs:
         run: poetry install
 
       - name: Install cyclonedx-bom
-        run: poetry add --group dev cyclonedx-bom
+        run: pip install cyclonedx-bom
 
       - name: Generate SBOM
         run: poetry run cyclonedx-py --format json --output sbom.json
