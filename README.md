@@ -24,3 +24,24 @@ jobs:
 
 **Required repository secrets:**
 - `DEPENDENCYTRACK_APIKEY`: The API key for accessing DependencyTrack.
+
+### DependencyTrack (dependency-track-python-poetry.yml)
+
+Generates and uploads a Software Bill of Materials (SBOM) for Python projects managed with Poetry to DependencyTrack.
+
+**Usage:**
+```yaml
+jobs:
+  dependencyTrack:
+    uses: softwareone-platform/ops-template/.github/workflows/dependency-track-python-poetry.yml@main
+    with:
+      projectName: 'your-project-name'
+    secrets:
+      DEPENDENCYTRACK_APIKEY: ${{ secrets.DEPENDENCYTRACK_APIKEY }}
+```
+
+**Required Inputs:**
+- `projectName`: The name of the project in DependencyTrack.
+
+**Required repository secrets:**
+- `DEPENDENCYTRACK_APIKEY`: The API key for accessing DependencyTrack.

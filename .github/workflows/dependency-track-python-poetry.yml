@@ -1,4 +1,4 @@
-name: DependencyTrack for Python/uv
+name: DependencyTrack for Python/Poetry
 
 on:
   workflow_call:
@@ -24,25 +24,24 @@ jobs:
         id: get_version
         run: echo "MAJOR=${GITHUB_REF/refs\/tags\//}" |cut -d"." -f1 >> "$GITHUB_OUTPUT"
 
-      - name: Install uv and set up its cache
-        uses: astral-sh/setup-uv@v4
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-
       - name: Install Python
         uses: actions/setup-python@v5
         with:
           python-version-file: ".python-version"
 
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
       - name: Install the project dependencies
-        run: uv sync
+        run: poetry install
 
       - name: Install cyclonedx-bom
-        run: uv tool install cyclonedx-bom
+        run: pip install cyclonedx-bom
 
       - name: Generate SBOM
-        run: uv tool run --from cyclonedx-bom cyclonedx-py environment .venv > sbom.json
+        run: poetry run cyclonedx-py --format json --output sbom.json
 
       - name: Upload SBOM
         uses: DependencyTrack/gh-upload-sbom@v3
