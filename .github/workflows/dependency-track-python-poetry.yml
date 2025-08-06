@@ -41,7 +41,7 @@ jobs:
         run: pip install cyclonedx-bom
 
       - name: Generate SBOM
-        run: poetry run cyclonedx-py poetry --format json --output sbom.json
+        run: cyclonedx-py poetry --output-format json --output-file sbom.json
 
       - name: Upload SBOM
         uses: DependencyTrack/gh-upload-sbom@v3
